@@ -1,0 +1,7 @@
+C:\Users\Владимир\source\repos\Meeting\bin\Debug\Meeting.exe.config
+C:\Users\Владимир\source\repos\Meeting\bin\Debug\Meeting.exe
+C:\Users\Владимир\source\repos\Meeting\bin\Debug\Meeting.pdb
+C:\Users\Владимир\source\repos\Meeting\obj\Debug\Meeting.csprojAssemblyReference.cache
+C:\Users\Владимир\source\repos\Meeting\obj\Debug\Meeting.csproj.CoreCompileInputs.cache
+C:\Users\Владимир\source\repos\Meeting\obj\Debug\Meeting.exe
+C:\Users\Владимир\source\repos\Meeting\obj\Debug\Meeting.pdb
