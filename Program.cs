@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Threading;
@@ -101,9 +102,25 @@ namespace Meeting
             public void send_inform()//функция полылки уведомления пользователю
             {
                 if (status == true)
-                    Console.WriteLine($"У Вас совещание {name} {date_begin.ToShortDateString()} в {date_begin.TimeOfDay} по адресу {location}, уведомление о встрече за {time_tor_remind}");
+                    Console.WriteLine($"Cовещание {name} {date_begin.ToShortDateString()} в {date_begin.TimeOfDay} по адресу {location}, уведомление о встрече за {time_tor_remind}");
             }
-  
+            public void send_inform(string path)//функция полылки уведомления пользователю
+            {
+                if (status == true)
+                    save_inf_file(path, $"Cовещание {name} {date_begin.ToShortDateString()} в {date_begin.TimeOfDay} по адресу {location}, уведомление о встрече за {time_tor_remind}");
+            }
+            public void save_inf_file(string path, string text){
+                try{
+                using (FileStream fstream = new FileStream($"{path}\\meetings.txt", FileMode.OpenOrCreate)){
+                    byte[] array = System.Text.Encoding.Default.GetBytes(text);
+                    fstream.Write(array, 0, array.Length);
+                    Console.WriteLine("Расписание встреч сохранено");
+
+                    }
+                }catch (Exception ex                ){
+                    Console.WriteLine(ex.Message);
+}
+}
             public List<DateTime>get_dates()//функция получения списка дат начал и конца, возможно это сделать и через кортеж
             {
                 List<DateTime> temp = new List<DateTime>();
@@ -189,6 +206,10 @@ namespace Meeting
                 }
                 return temp_meet;
             }
+            static public DateTime Parser_time(string _date, string path){
+                DateTime temp = DateTime.Parse(_date);
+                return temp;
+}
             static public List<DateTime> Parser_time(string _date)//Парсер даты для  атрибута дата встречи
             {
                 List<DateTime> Meet = new List<DateTime>();
@@ -286,6 +307,36 @@ namespace Meeting
                 }
                 else Console.WriteLine("Встреч не найдено");
             }
+           public void get_meetings(string path)//Получение всех встреч (были и будут)
+            {
+                if (My_meetings.Count != 0)
+                {
+                    foreach (var item in My_meetings)
+                    {
+                        item.send_inform(path);
+                    }
+                }
+                else Console.WriteLine("Встреч не найдено");
+            }
+            public void get_meetings(string _date, string path)//Получение встреч на конкретный день
+            {
+                int i = 0;
+                DateTime value = Parser_time(_date, path);
+                foreach (var item in My_meetings)
+                {
+                    if (DateTime.Compare(item.get_dates()[0].Date, value.Date) == 0)
+                    {
+                        item.send_inform(path);
+                        i++;
+                    }
+                    
+                }
+                if (i == 0)
+                {
+                    Console.WriteLine($"На {value.ToShortDateString()} совещаний нет");
+                }
+            }
+
             public void get_meetings(DateTime value)//Получение встреч на конкретный день
             {
                 int i = 0;
@@ -306,14 +357,15 @@ namespace Meeting
         }
         static void Main(string[] args)
         {
-
+            string _path = "d:";
             MeetingManagemant mine = new MeetingManagemant();
-            mine.Add_Meeting("Первое", "21.09.2020 10:00 12:00", "Moscow");
+            mine.Add_Meeting("Первое", "21.09.2020 11:00 12:00", "Moscow");
             mine.Add_Meeting("Второе", "21.09.2020 10:00 12:00", "Moscow");
             mine.Add_Meeting("Третье", "20.09.2020 19:00 20:00", "Moscow");
-            mine.get_meetings(DateTime.Now.AddDays(1));
+            mine.get_meetings("21.09.2020", _path);
             mine.change_meeting("Первое");
-            mine.get_meetings();
+
+  
             
             /*План тестирования:
             1. Компиляция программы. Ожидание -  программа скомпилируется из оверштться с кодом 0
